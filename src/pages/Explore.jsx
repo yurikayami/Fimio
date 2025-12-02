@@ -158,10 +158,11 @@ export const Explore = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 md:gap-8 min-h-screen px-4 md:px-0">
-      {/* Mobile Filter Toggle */}
-      <div className="lg:hidden flex items-center justify-between mb-3 md:mb-4">
-        <h1 className="text-xl md:text-2xl font-heading font-bold">Khám phá</h1>
+    <div className="flex flex-1">
+      <div className="w-full mx-auto px-4 md:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-4 md:gap-8 min-h-screen">
+        {/* Mobile Filter Toggle */}
+        <div className="lg:hidden flex items-center justify-between mb-3 md:mb-4">
+          <h1 className="text-xl md:text-2xl font-heading font-bold">Khám phá</h1>
         <Button variant="outline" onClick={() => setShowMobileFilters(true)} className="min-h-[44px] h-11 active:scale-95">
           <SlidersHorizontal className="h-4 w-4 mr-2" />
           Bộ lọc
@@ -328,6 +329,7 @@ export const Explore = () => {
             )}
           </>
         )}
+      </div>
       </div>
     </div>
   );

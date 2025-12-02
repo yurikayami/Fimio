@@ -28,7 +28,7 @@ export const MovieCardTop10 = ({ movie, rank }) => {
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Số thứ hạng - Gradient gold → orange, lệch ngoài */}
-        <div className="absolute -left-10 md:-left-12 top-8 z-20">
+        <div className="absolute -left-7 md:-left-12 top-8 z-20">
           <span className="text-7xl md:text-8xl font-black bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent drop-shadow-lg">
             {rank}
           </span>

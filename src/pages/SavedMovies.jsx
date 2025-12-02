@@ -26,17 +26,19 @@ export const SavedMovies = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Bookmark className="h-8 w-8 text-accent" />
-          <h1 className="text-3xl font-heading font-bold">Phim đã lưu</h1>
-        </div>
-        <span className="text-muted-foreground">
-          {savedMovies.length} phim
-        </span>
-      </div>
+    <div className="flex flex-1">
+      <div className="w-full mx-auto px-4 md:px-6 lg:px-8 py-8 flex-1">
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Bookmark className="h-8 w-8 text-accent" />
+              <h1 className="text-3xl font-heading font-bold">Phim đã lưu</h1>
+            </div>
+            <span className="text-muted-foreground">
+              {savedMovies.length} phim
+            </span>
+          </div>
 
       {/* Movies Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -75,6 +77,8 @@ export const SavedMovies = () => {
             </Button>
           </div>
         ))}
+        </div>
+        </div>
       </div>
     </div>
   );

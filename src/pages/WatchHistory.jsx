@@ -48,15 +48,17 @@ export const WatchHistory = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-heading font-bold">Lịch sử xem</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {history.length} phim đã xem
-          </p>
-        </div>
+    <div className="flex flex-1">
+      <div className="w-full mx-auto px-4 md:px-6 lg:px-8 py-8 flex-1">
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-heading font-bold">Lịch sử xem</h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                {history.length} phim đã xem
+              </p>
+            </div>
         {history.length > 0 && (
           <Button
             variant="outline"
@@ -178,6 +180,8 @@ export const WatchHistory = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+        </div>
+      </div>
     </div>
   );
 };

@@ -113,12 +113,13 @@ export function UserProfile() {
   const getSavedCount = () => getSavedMovies().length;
 
   return (
-    <div className="space-y-6 pb-8">
-      {/* Edit Settings Modal */}
-      {isEditMode && (
-        <Card className="bg-slate-800/80 border-slate-700 fixed inset-0 z-50 m-4 overflow-y-auto md:inset-auto md:right-4 md:top-20 md:w-96 md:max-h-[calc(100vh-100px)]">
-          <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle>Cài đặt hồ sơ</CardTitle>
+    <div className="flex flex-1">
+      <div className="w-full mx-auto px-4 md:px-6 lg:px-8 py-8 flex-1 space-y-6 pb-8">
+        {/* Edit Settings Modal */}
+        {isEditMode && (
+          <Card className="bg-slate-800/80 border-slate-700 fixed inset-0 z-50 m-4 overflow-y-auto md:inset-auto md:right-4 md:top-20 md:w-96 md:max-h-[calc(100vh-100px)]">
+            <CardHeader className="flex flex-row items-center justify-between pb-3">
+              <CardTitle>Cài đặt hồ sơ</CardTitle>
             <Button variant="ghost" size="icon" onClick={handleCancelEdit}>
               <X className="h-5 w-5" />
             </Button>
@@ -199,18 +200,19 @@ export function UserProfile() {
         </Card>
       )}
 
-      {/* Profile Banner */}
-      <div className="relative aspect-[47/10] rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-800 via-slate-900 to-black group">
-        {/* Banner Background */}
+      {/* Profile Banner & Info - Desktop: Banner with overlay content | Mobile: Card layout */}
+      <div className="md:relative md:aspect-[47/10] md:rounded-2xl md:overflow-hidden md:shadow-2xl md:bg-gradient-to-br md:from-slate-800 md:via-slate-900 md:to-black md:group">
+        
+        {/* Desktop: Banner Background */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="hidden md:block absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${banner})` }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/40" />
         </div>
-        
-        {/* Edit Button on Banner Hover */}
+
+        {/* Edit Button */}
         <button
           onClick={() => {
             setTempUsername(username);
@@ -218,94 +220,92 @@ export function UserProfile() {
             setTempBannerUrl(banner);
             setIsEditMode(true);
           }}
-          className="absolute top-4 right-4 z-10 p-2 bg-accent hover:bg-accent/90 rounded-lg transition-all duration-200 transform hover:scale-110 shadow-lg"
+          className="absolute top-4 right-4 z-10 p-2 bg-accent hover:bg-accent/90 rounded-lg transition-all duration-200 transform hover:scale-110 shadow-lg active:scale-95 min-h-[44px] min-w-[44px] flex items-center justify-center"
           title="Chỉnh sửa hồ sơ"
         >
           <Edit3 className="w-5 h-5 text-white" />
         </button>
         
-        {/* Profile Content */}
-        <div className="relative h-full flex items-end p-8">
-          <div className="flex items-end gap-6 w-full">
+        {/* Mobile: Card Layout | Desktop: Overlay Content */}
+        <div className="md:relative md:h-full md:flex md:items-end md:p-8 p-4 md:p-0 bg-gradient-to-br from-slate-800/50 via-slate-900/50 to-black/50 md:bg-none rounded-xl md:rounded-none md:shadow-none shadow-lg md:border-0 border border-slate-700/50">
+          <div className="flex gap-4 md:gap-6 w-full md:items-end">
             {/* Avatar */}
-            <div className="relative group/avatar">
-              <div className="w-32 h-32 rounded-lg border-4 border-white/20 overflow-hidden shadow-2xl shadow-black/80 transition-transform duration-300 group-hover/avatar:scale-105">
+            <div className="relative group/avatar flex-shrink-0">
+              <div className="w-20 h-20 md:w-32 md:h-32 rounded-lg border-2 md:border-4 border-white/20 overflow-hidden shadow-lg md:shadow-2xl shadow-black/80 transition-transform duration-300 group-hover/avatar:scale-105">
                 <img
                   src={avatar}
                   alt="User Avatar"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute bottom-2 right-2 w-5 h-5 bg-green-500 rounded-full border-4 border-black animate-pulse" />
+              <div className="absolute bottom-0.5 right-0.5 w-3 h-3 md:w-5 md:h-5 bg-green-500 rounded-full border-2 md:border-4 border-black animate-pulse" />
             </div>
 
             {/* User Info */}
-            <div className="flex-1 pb-2">
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <h1 className="text-base md:text-4xl font-bold text-white drop-shadow-lg truncate">
                   {username}
                 </h1>
-                <div className="flex items-center gap-1 px-3 py-1 bg-yellow-500/20 border border-yellow-500/50 rounded-full">
-                  <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                  <span className="text-sm font-bold text-yellow-300">VIP</span>
+                <div className="flex items-center gap-1 px-2 py-0.5 md:px-3 md:py-1 bg-yellow-500/20 border border-yellow-500/50 rounded-full">
+                  <Star className="w-3 h-3 md:w-4 md:h-4 text-yellow-400 fill-yellow-400" />
+                  <span className="text-xs md:text-sm font-bold text-yellow-300">VIP</span>
                 </div>
               </div>
-              <p className="text-slate-300 text-sm mb-4 flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                @movie_lover • Tham gia từ Tháng 1, 2024
+              <p className="text-slate-300 text-xs md:text-sm mb-3 md:mb-4 flex items-center gap-2 truncate">
+                <Calendar className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
+                <span className="truncate">@movie_lover • Tham gia Tháng 1, 2024</span>
               </p>
               
               {/* Quick Stats */}
-              <div className="flex gap-4 md:gap-8 flex-wrap">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-red-500/20 rounded-lg">
-                    <Film className="w-5 h-5 text-red-400" />
+              <div className="flex md:flex gap-3 md:gap-4">
+                <div className="flex items-center gap-1.5">
+                  <div className="p-1.5 md:p-2 bg-red-500/20 rounded">
+                    <Film className="w-4 h-4 md:w-5 md:h-5 text-red-400" />
                   </div>
                   <div>
-                    <p className="text-xl md:text-2xl font-bold text-white">{stats?.totalMoviesWatched || 0}</p>
-                    <p className="text-xs text-slate-400">Phim đã xem</p>
+                    <p className="text-sm md:text-xl font-bold text-white">{stats?.totalMoviesWatched || 0}</p>
+                    <p className="text-xs text-slate-400 hidden md:block">Phim</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-pink-500/20 rounded-lg">
-                    <Heart className="w-5 h-5 text-pink-400" />
+                <div className="flex items-center gap-1.5">
+                  <div className="p-1.5 md:p-2 bg-pink-500/20 rounded">
+                    <Heart className="w-4 h-4 md:w-5 md:h-5 text-pink-400" />
                   </div>
                   <div>
-                    <p className="text-xl md:text-2xl font-bold text-white">{getSavedCount()}</p>
-                    <p className="text-xs text-slate-400">Yêu thích</p>
+                    <p className="text-sm md:text-xl font-bold text-white">{getSavedCount()}</p>
+                    <p className="text-xs text-slate-400 hidden md:block">Yêu thích</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-blue-500/20 rounded-lg">
-                    <Clock className="w-5 h-5 text-blue-400" />
+                <div className="flex items-center gap-1.5">
+                  <div className="p-1.5 md:p-2 bg-blue-500/20 rounded">
+                    <Clock className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-xl md:text-2xl font-bold text-white">{formatDuration(stats?.totalWatchTime || 0)}</p>
-                    <p className="text-xs text-slate-400">Thời lượng</p>
+                    <p className="text-sm md:text-xl font-bold text-white">{formatDuration(stats?.totalWatchTime || 0)}</p>
+                    <p className="text-xs text-slate-400 hidden md:block">Thời lượng</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      </div>      {/* Stats Cards - Grid 2 cột mobile */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
         {/* Total Movies */}
         <Card className="bg-gradient-to-br from-red-500/10 via-red-500/5 to-transparent border-red-500/20 hover:border-red-500/50 transition-all">
-          <CardContent className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <p className="text-sm text-slate-400 mb-1">Tổng phim xem</p>
-                <p className="text-3xl font-bold text-white">{stats.totalMoviesWatched}</p>
-                <div className="flex items-center gap-1 mt-2">
+          <CardContent className="p-2 md:p-6">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-xs md:text-sm text-slate-500 md:text-slate-400 mb-0.5 md:mb-1">Tổng xem</p>
+                <p className="text-lg md:text-3xl font-bold text-white">{stats.totalMoviesWatched}</p>
+                <div className="hidden md:flex items-center gap-1 mt-2">
                   <TrendingUp className="w-3 h-3 text-green-400" />
-                  <span className="text-xs text-green-400">+12% tuần này</span>
+                  <span className="text-xs text-green-400">+12% tuần</span>
                 </div>
               </div>
-              <div className="p-3 bg-red-500/20 rounded-xl">
-                <Film className="w-6 h-6 text-red-400" />
+              <div className="p-1.5 md:p-3 bg-red-500/20 rounded-lg md:rounded-xl flex-shrink-0">
+                <Film className="w-3.5 h-3.5 md:w-6 md:h-6 text-red-400" />
               </div>
             </div>
           </CardContent>
@@ -313,15 +313,15 @@ export function UserProfile() {
 
         {/* Watch Time */}
         <Card className="bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent border-blue-500/20 hover:border-blue-500/50 transition-all">
-          <CardContent className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <p className="text-sm text-slate-400 mb-1">Thời lượng xem</p>
-                <p className="text-3xl font-bold text-white">{Math.floor(stats.totalWatchTime / 60)}h</p>
-                <p className="text-xs text-slate-500 mt-2">{stats.totalWatchTime % 60}m bổ sung</p>
+          <CardContent className="p-2 md:p-6">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-xs md:text-sm text-slate-500 md:text-slate-400 mb-0.5 md:mb-1">Thời lượng</p>
+                <p className="text-lg md:text-3xl font-bold text-white">{Math.floor(stats.totalWatchTime / 60)}h</p>
+                <p className="text-xs text-slate-600 md:text-slate-500 mt-1 md:mt-2 hidden md:block">{stats.totalWatchTime % 60}m</p>
               </div>
-              <div className="p-3 bg-blue-500/20 rounded-xl">
-                <Clock className="w-6 h-6 text-blue-400" />
+              <div className="p-1.5 md:p-3 bg-blue-500/20 rounded-lg md:rounded-xl flex-shrink-0">
+                <Clock className="w-3.5 h-3.5 md:w-6 md:h-6 text-blue-400" />
               </div>
             </div>
           </CardContent>
@@ -329,18 +329,18 @@ export function UserProfile() {
 
         {/* Favorites */}
         <Card className="bg-gradient-to-br from-pink-500/10 via-pink-500/5 to-transparent border-pink-500/20 hover:border-pink-500/50 transition-all">
-          <CardContent className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <p className="text-sm text-slate-400 mb-1">Phim yêu thích</p>
-                <p className="text-3xl font-bold text-white">{getSavedCount()}</p>
-                <div className="flex items-center gap-1 mt-2">
+          <CardContent className="p-2 md:p-6">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-xs md:text-sm text-slate-500 md:text-slate-400 mb-0.5 md:mb-1">Yêu thích</p>
+                <p className="text-lg md:text-3xl font-bold text-white">{getSavedCount()}</p>
+                <div className="hidden md:flex items-center gap-1 mt-2">
                   <Heart className="w-3 h-3 text-pink-400 fill-pink-400" />
                   <span className="text-xs text-pink-400">Đã lưu</span>
                 </div>
               </div>
-              <div className="p-3 bg-pink-500/20 rounded-xl">
-                <Heart className="w-6 h-6 text-pink-400" />
+              <div className="p-1.5 md:p-3 bg-pink-500/20 rounded-lg md:rounded-xl flex-shrink-0">
+                <Heart className="w-3.5 h-3.5 md:w-6 md:h-6 text-pink-400" />
               </div>
             </div>
           </CardContent>
@@ -348,15 +348,15 @@ export function UserProfile() {
 
         {/* Achievements */}
         <Card className="bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-transparent border-yellow-500/20 hover:border-yellow-500/50 transition-all">
-          <CardContent className="p-6">
-            <div className="flex items-start justify-between mb-4">
+          <CardContent className="p-2 md:p-6">
+            <div className="flex items-start justify-between gap-2">
               <div>
-                <p className="text-sm text-slate-400 mb-1">Thành tích</p>
-                <p className="text-3xl font-bold text-white">{stats.achievements.length}</p>
-                <p className="text-xs text-yellow-400 mt-2">Đã mở khóa</p>
+                <p className="text-xs md:text-sm text-slate-500 md:text-slate-400 mb-0.5 md:mb-1">Thành tích</p>
+                <p className="text-lg md:text-3xl font-bold text-white">{stats.achievements.length}</p>
+                <p className="text-xs text-yellow-500 md:text-yellow-400 mt-1 md:mt-2 hidden md:block">Mở khóa</p>
               </div>
-              <div className="p-3 bg-yellow-500/20 rounded-xl">
-                <Award className="w-6 h-6 text-yellow-400" />
+              <div className="p-1.5 md:p-3 bg-yellow-500/20 rounded-lg md:rounded-xl flex-shrink-0">
+                <Award className="w-3.5 h-3.5 md:w-6 md:h-6 text-yellow-400" />
               </div>
             </div>
           </CardContent>
@@ -520,6 +520,7 @@ export function UserProfile() {
           )}
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

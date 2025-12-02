@@ -8,16 +8,18 @@ export const Layout = () => {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header />
-      <main className="flex-1 pb-64 md:pb-0">
-        <Outlet />
+      <main className="flex-1 w-full">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
+          <Outlet />
+        </div>
       </main>
       
       {/* Bottom Navigation - Mobile only */}
       <BottomNavigation />
       
       {/* Professional Footer - Ẩn trên mobile */}
-      <footer className="hidden md:block border-t border-slate-700 bg-slate-900/50 mt-16">
-        <div className="container mx-auto px-4">
+      <footer className="hidden md:block border-t border-slate-700 bg-slate-900/50 mt-16 mb-2.5">
+        <div className="container mx-auto px-4 pt-8">
           {/* Grid - Ẩn trên mobile, responsive trên desktop */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 hidden md:grid">
             {/* Company Info */}
@@ -28,7 +30,7 @@ export const Layout = () => {
               </p>
               {/* Social Media */}
               <div className="flex gap-3 pt-2">
-                <a href="#" className="p-2 rounded-lg bg-slate-800 hover:bg-accent transition-colors text-slate-300 hover:text-white">
+                <a href="https://github.com/yurikayami/Fimio" className="p-2 rounded-lg bg-slate-800 hover:bg-accent transition-colors text-slate-300 hover:text-white">
                   <Github className="w-5 h-5" />
                 </a>
                 <a href="#" className="p-2 rounded-lg bg-slate-800 hover:bg-accent transition-colors text-slate-300 hover:text-white">
