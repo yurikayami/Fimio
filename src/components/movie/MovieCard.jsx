@@ -53,7 +53,7 @@ export const MovieCard = memo(({ movie, priority = false }) => {
   return (
     <Link
       to={`/movie/${movie.slug}`}
-      className="group block bg-secondary rounded-lg overflow-hidden border border-slate-700 transition-transform duration-300 hover:-translate-y-[15px] hover:border-indigo-500/50"
+      className="group block bg-secondary rounded-lg overflow-hidden border border-slate-700 transition-all duration-300 md:hover:-translate-y-[15px] md:hover:border-indigo-500/50 active:scale-95 min-h-[200px]"
     >
       <div ref={imgRef} className="relative pb-[150%] bg-slate-700">
         {/* Ultra-fast blur-up placeholder */}
@@ -90,28 +90,28 @@ export const MovieCard = memo(({ movie, priority = false }) => {
           />
         )}
 
-        {/* Year Tag */}
+        {/* Year Tag - Ẩn trên mobile */}
         {movie.year && (
-          <div className="absolute top-2 left-2 px-2 py-1 bg-slate-800/70 rounded border border-slate-700 text-xs text-indigo-300 font-medium z-10">
+          <div className="hidden md:block absolute top-2 left-2 px-2 py-1 bg-slate-800/70 rounded border border-slate-700 text-xs text-indigo-300 font-medium z-10">
             {movie.year}
           </div>
         )}
 
         {/* Episode Status Tag */}
         {movie.episode_current && (
-          <div className="absolute top-2 right-2 px-2 py-1 bg-slate-800/70 rounded border border-slate-700 text-xs text-orange-300 font-medium flex items-center gap-1 z-10">
-            <Clock className="h-3 w-3" />
+          <div className="absolute top-2 right-2 px-1.5 py-0.5 md:px-2 md:py-1 bg-slate-800/70 rounded border border-slate-700 text-[10px] md:text-xs text-orange-300 font-medium flex items-center gap-0.5 md:gap-1 z-10">
+            <Clock className="h-2.5 w-2.5 md:h-3 md:w-3" />
             {movie.episode_current}
           </div>
         )}
 
         {/* Movie Title Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#000000]/95 via-[#000000]/70 to-transparent pt-6 pb-3 px-3 z-10">
-          <h3 className="text-sm font-semibold text-slate-100 text-center mb-1 line-clamp-2">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#000000]/95 via-[#000000]/70 to-transparent pt-4 md:pt-6 pb-2 md:pb-3 px-2 md:px-3 z-10">
+          <h3 className="text-xs md:text-sm font-semibold text-slate-100 text-center mb-0.5 md:mb-1 line-clamp-2">
             {movie.name}
           </h3>
           {movie.origin_name && movie.origin_name !== movie.name && (
-            <p className="text-xs text-slate-400 text-center line-clamp-1">
+            <p className="text-[10px] md:text-xs text-slate-400 text-center line-clamp-1">
               {movie.origin_name}
             </p>
           )}

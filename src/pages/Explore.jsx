@@ -158,11 +158,11 @@ export const Explore = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 min-h-screen">
+    <div className="flex flex-col lg:flex-row gap-4 md:gap-8 min-h-screen px-4 md:px-0">
       {/* Mobile Filter Toggle */}
-      <div className="lg:hidden flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-heading font-bold">Khám phá</h1>
-        <Button variant="outline" onClick={() => setShowMobileFilters(true)}>
+      <div className="lg:hidden flex items-center justify-between mb-3 md:mb-4">
+        <h1 className="text-xl md:text-2xl font-heading font-bold">Khám phá</h1>
+        <Button variant="outline" onClick={() => setShowMobileFilters(true)} className="min-h-[44px] h-11 active:scale-95">
           <SlidersHorizontal className="h-4 w-4 mr-2" />
           Bộ lọc
         </Button>
@@ -171,20 +171,20 @@ export const Explore = () => {
       {/* Sidebar Filters - Desktop & Mobile Overlay */}
       <aside className={cn(
         "lg:w-72 flex-shrink-0",
-        showMobileFilters ? "fixed inset-0 z-50 bg-black p-4 overflow-y-auto" : "hidden lg:block"
+        showMobileFilters ? "fixed inset-0 z-50 bg-black/95 backdrop-blur-sm p-4 overflow-y-auto" : "hidden lg:block"
       )}>
-        <Card className="border-slate-700 bg-slate-900">
+        <Card className="border-slate-700 bg-slate-900/95">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Bộ lọc tìm kiếm</CardTitle>
+              <CardTitle className="text-base md:text-lg">Bộ lọc tìm kiếm</CardTitle>
               {showMobileFilters && (
-                <Button variant="ghost" size="icon" onClick={() => setShowMobileFilters(false)} className="lg:hidden">
+                <Button variant="ghost" size="icon" onClick={() => setShowMobileFilters(false)} className="lg:hidden min-h-[44px] min-w-[44px] active:scale-95">
                   <X className="h-5 w-5" />
                 </Button>
               )}
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3 md:space-y-4">
             {/* Type Filter */}
             <div className="space-y-2">
               <label className="text-xs font-semibold text-slate-300 uppercase tracking-wide">Loại phim</label>

@@ -131,7 +131,7 @@ export const MovieDetail = () => {
   const isSaved = isMovieSaved(movieData.slug);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 md:space-y-8">
       {/* Background Overlay */}
       <div className="fixed inset-0 bg-background -z-10" />
 
@@ -155,10 +155,10 @@ export const MovieDetail = () => {
       )}
 
       {/* Movie Info */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 px-4 md:px-0">
         {/* Poster */}
         <div className="md:col-span-1">
-          <div className="sticky top-24">
+          <div className="md:sticky md:top-24">
             <img
               src={buildImageUrl(movieData.poster_url)}
               alt={movieData.name}
@@ -168,21 +168,21 @@ export const MovieDetail = () => {
               }}
             />
             
-            {/* Action Buttons */}
-            <div className="flex gap-2 mt-4">
+            {/* Action Buttons - Tăng kích thước cho mobile */}
+            <div className="flex gap-2 mt-3 md:mt-4">
               <Button
                 onClick={handleBookmark}
                 variant={isSaved ? 'default' : 'outline'}
-                className="flex-1"
+                className="flex-1 min-h-[48px] h-12 text-sm md:text-base active:scale-95"
               >
                 {isSaved ? (
                   <>
-                    <BookmarkCheck className="h-4 w-4 mr-2" />
+                    <BookmarkCheck className="h-4 w-4 md:h-4 md:w-4 mr-2" />
                     Đã lưu
                   </>
                 ) : (
                   <>
-                    <Bookmark className="h-4 w-4 mr-2" />
+                    <Bookmark className="h-4 w-4 md:h-4 md:w-4 mr-2" />
                     Lưu phim
                   </>
                 )}
@@ -192,10 +192,10 @@ export const MovieDetail = () => {
                 <Button
                   asChild
                   variant="outline"
-                  className="flex-1"
+                  className="flex-1 min-h-[48px] h-12 text-sm md:text-base active:scale-95"
                 >
                   <a href={movieData.trailer_url} target="_blank" rel="noopener noreferrer">
-                    <Play className="h-4 w-4 mr-2" />
+                    <Play className="h-4 w-4 md:h-4 md:w-4 mr-2" />
                     Trailer
                   </a>
                 </Button>
@@ -205,45 +205,45 @@ export const MovieDetail = () => {
         </div>
 
         {/* Details */}
-        <div className="md:col-span-2 space-y-6">
+        <div className="md:col-span-2 space-y-4 md:space-y-6">
           {/* Title */}
           <div>
-            <h1 className="text-4xl font-heading font-bold mb-2">{movieData.name}</h1>
-            <p className="text-xl text-muted-foreground">{movieData.origin_name}</p>
+            <h1 className="text-2xl md:text-4xl font-heading font-bold mb-1 md:mb-2">{movieData.name}</h1>
+            <p className="text-base md:text-xl text-muted-foreground">{movieData.origin_name}</p>
           </div>
 
-          {/* Meta Info */}
-          <div className="flex flex-wrap gap-3">
+          {/* Meta Info - Ẩn một số trên mobile */}
+          <div className="flex flex-wrap gap-2 md:gap-3">
             {movieData.year && (
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg border border-slate-700">
-                <Calendar className="h-4 w-4 text-accent" />
-                <span className="text-sm font-medium">{movieData.year}</span>
+              <div className="flex items-center gap-1.5 md:gap-2 px-2 py-1 md:px-3 md:py-1.5 bg-secondary rounded-lg border border-slate-700">
+                <Calendar className="h-3.5 w-3.5 md:h-4 md:w-4 text-accent" />
+                <span className="text-xs md:text-sm font-medium">{movieData.year}</span>
               </div>
             )}
             
             {movieData.time && (
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg border border-slate-700">
-                <Clock className="h-4 w-4 text-accent" />
-                <span className="text-sm font-medium">{movieData.time}</span>
+              <div className="hidden sm:flex items-center gap-1.5 md:gap-2 px-2 py-1 md:px-3 md:py-1.5 bg-secondary rounded-lg border border-slate-700">
+                <Clock className="h-3.5 w-3.5 md:h-4 md:w-4 text-accent" />
+                <span className="text-xs md:text-sm font-medium">{movieData.time}</span>
               </div>
             )}
             
             {movieData.episode_current && (
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg border border-slate-700">
-                <Play className="h-4 w-4 text-accent" />
-                <span className="text-sm font-medium">{movieData.episode_current}</span>
+              <div className="flex items-center gap-1.5 md:gap-2 px-2 py-1 md:px-3 md:py-1.5 bg-secondary rounded-lg border border-slate-700">
+                <Play className="h-3.5 w-3.5 md:h-4 md:w-4 text-accent" />
+                <span className="text-xs md:text-sm font-medium">{movieData.episode_current}</span>
               </div>
             )}
             
             {movieData.quality && (
-              <div className="px-3 py-1.5 bg-accent rounded-lg">
-                <span className="text-sm font-bold">{movieData.quality}</span>
+              <div className="px-2 py-1 md:px-3 md:py-1.5 bg-accent rounded-lg">
+                <span className="text-xs md:text-sm font-bold">{movieData.quality}</span>
               </div>
             )}
             
             {movieData.lang && (
-              <div className="px-3 py-1.5 bg-green-600 rounded-lg">
-                <span className="text-sm font-medium">{movieData.lang}</span>
+              <div className="hidden sm:block px-2 py-1 md:px-3 md:py-1.5 bg-green-600 rounded-lg">
+                <span className="text-xs md:text-sm font-medium">{movieData.lang}</span>
               </div>
             )}
           </div>

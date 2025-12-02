@@ -4,7 +4,7 @@
 
 **Khám phá hàng ngàn bộ phim, series, anime chất lượng cao — hoàn toàn miễn phí**
 
-![Fimio](https://i.ibb.co/tTNSSGWY/Fimio.png)
+![Fimio](/src/assets/Fimio.png)
 
 [🌐 Truy Cập Website](#) • [📚 Tài Liệu](#) • [🐛 Báo Cáo Lỗi](#) • [💬 Liên Hệ](#)
 

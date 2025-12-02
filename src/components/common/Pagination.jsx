@@ -61,31 +61,37 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-8">
-      {/* Previous Button */}
+    <div className="flex items-center justify-center gap-1.5 md:gap-2 mt-6 md:mt-8 px-4">
+      {/* Previous Button - Tăng touch target */}
       <Button
         variant="outline"
         size="icon"
         onClick={() => handlePageClick(currentPage - 1)}
         disabled={currentPage === 1}
-        className="h-9 w-9"
+        className="h-10 w-10 md:h-9 md:w-9 min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 active:scale-95"
       >
-        <ChevronLeft className="h-4 w-4" />
+        <ChevronLeft className="h-4 w-4 md:h-4 md:w-4" />
       </Button>
 
-      {/* Page Numbers */}
+      {/* Page Numbers - Ẩn một số trang trên mobile */}
       <div className="flex gap-1">
         {pageNumbers.map((page, index) => {
           if (page === '...') {
             return (
               <div
                 key={`ellipsis-${index}`}
-                className="flex h-9 w-9 items-center justify-center text-muted-foreground"
+                className="hidden sm:flex h-10 w-10 md:h-9 md:w-9 items-center justify-center text-muted-foreground text-sm md:text-base"
               >
                 ...
               </div>
             );
           }
+
+          // Trên mobile, chỉ hiển thị trang hiện tại và các trang gần nó
+          const shouldShowOnMobile = 
+            page === 1 || 
+            page === totalPages || 
+            Math.abs(page - currentPage) <= 1;
 
           return (
             <Button
@@ -94,8 +100,9 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
               size="icon"
               onClick={() => handlePageClick(page)}
               className={cn(
-                'h-9 w-9',
-                page === currentPage && 'bg-accent text-accent-foreground'
+                'h-10 w-10 md:h-9 md:w-9 min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 text-sm md:text-base active:scale-95',
+                page === currentPage && 'bg-accent text-accent-foreground',
+                !shouldShowOnMobile && 'hidden sm:flex'
               )}
             >
               {page}
@@ -104,15 +111,15 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         })}
       </div>
 
-      {/* Next Button */}
+      {/* Next Button - Tăng touch target */}
       <Button
         variant="outline"
         size="icon"
         onClick={() => handlePageClick(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="h-9 w-9"
+        className="h-10 w-10 md:h-9 md:w-9 min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 active:scale-95"
       >
-        <ChevronRight className="h-4 w-4" />
+        <ChevronRight className="h-4 w-4 md:h-4 md:w-4" />
       </Button>
     </div>
   );

@@ -66,7 +66,7 @@ export const HeroSection = ({ movies }) => {
   const placeholderUrl = generateLQIP(20);
   
   return (
-    <div className="relative w-full h-[90vh] max-h-[800px] min-h-[600px] overflow-hidden bg-black">
+    <div className="relative w-full h-[70vh] md:h-[85vh] lg:h-[90vh] max-h-[700px] md:max-h-[800px] min-h-[500px] md:min-h-[600px] overflow-hidden bg-black">
       {/* Background Image - LCP optimized */}
       <div 
          key={movie?.slug + '-bg'}
@@ -109,36 +109,36 @@ export const HeroSection = ({ movies }) => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center w-full">
+      <div className="relative z-10 container mx-auto px-4 md:px-6 h-full flex items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-center w-full">
           
           {/* Left Column: Text Content */}
-          <div className="md:col-span-7 lg:col-span-6 space-y-6 transition-opacity duration-300">
-             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-black text-white leading-tight drop-shadow-lg">
+          <div className="md:col-span-7 lg:col-span-6 space-y-3 md:space-y-6 transition-opacity duration-300">
+             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-black text-white leading-tight drop-shadow-lg">
               {movie?.name}
             </h1>
-            <p className="text-xl text-slate-300 font-light drop-shadow-md">
+            <p className="text-base md:text-xl text-slate-300 font-light drop-shadow-md line-clamp-2">
               {movie?.origin_name}
             </p>
 
-            {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-slate-300">
-               <span className="flex items-center gap-2"><Award className="w-4 h-4 text-accent" /> {movie?.quality || 'HD'}</span>
-               <span className="flex items-center gap-2"><Calendar className="w-4 h-4 text-accent" /> {movie?.year}</span>
-               <span className="flex items-center gap-2"><Clock className="w-4 h-4 text-accent" /> {movie?.time}</span>
+            {/* Metadata - Ẩn một số trên mobile */}
+            <div className="flex flex-wrap items-center gap-x-4 md:gap-x-6 gap-y-2 text-sm md:text-base text-slate-300">
+               <span className="flex items-center gap-1.5 md:gap-2"><Award className="w-3.5 h-3.5 md:w-4 md:h-4 text-accent" /> {movie?.quality || 'HD'}</span>
+               <span className="flex items-center gap-1.5 md:gap-2"><Calendar className="w-3.5 h-3.5 md:w-4 md:h-4 text-accent" /> {movie?.year}</span>
+               <span className="hidden sm:flex items-center gap-1.5 md:gap-2"><Clock className="w-3.5 h-3.5 md:w-4 md:h-4 text-accent" /> {movie?.time}</span>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3 pt-6">
-              <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-white h-12 px-7 rounded-lg text-base font-semibold shadow-lg shadow-accent/30 transition-all duration-200 hover:shadow-accent/50 active:scale-95">
-                <Link to={`/movie/${movie.slug}`} className="flex items-center gap-3">
-                  <Play className="w-5 h-5 fill-current" />
+            {/* Action Buttons - Tăng touch target cho mobile */}
+            <div className="flex flex-wrap gap-2 md:gap-3 pt-3 md:pt-6">
+              <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-white min-h-[48px] h-12 md:h-12 px-5 md:px-7 rounded-lg text-sm md:text-base font-semibold shadow-lg shadow-accent/30 transition-all duration-200 hover:shadow-accent/50 active:scale-95">
+                <Link to={`/movie/${movie.slug}`} className="flex items-center gap-2 md:gap-3">
+                  <Play className="w-4 h-4 md:w-5 md:h-5 fill-current" />
                   Xem Ngay
                 </Link>
               </Button>
-              <Button asChild size="lg" className="bg-secondary hover:bg-secondary/80 border border-slate-600 text-foreground h-12 px-7 rounded-lg text-base font-semibold transition-all duration-200 hover:border-slate-500">
+              <Button asChild size="lg" className="bg-secondary hover:bg-secondary/80 border border-slate-600 text-foreground min-h-[48px] h-12 md:h-12 px-5 md:px-7 rounded-lg text-sm md:text-base font-semibold transition-all duration-200 hover:border-slate-500 active:scale-95">
                 <Link to={`/movie/${movie.slug}`} className="flex items-center gap-2">
-                  <Info className="w-5 h-5" />
+                  <Info className="w-4 h-4 md:w-5 md:h-5" />
                   Chi Tiết
                 </Link>
               </Button>
@@ -167,14 +167,14 @@ export const HeroSection = ({ movies }) => {
           </div>
         </div>
       </div>
-       {/* Slider Indicators */}
-       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+       {/* Slider Indicators - Tăng kích thước cho mobile */}
+       <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {movies.map((_, index) => (
           <button
             key={index}
             onClick={() => handleSlideChange(index)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              index === currentIndex ? 'bg-accent w-6' : 'bg-slate-600 w-2 hover:bg-slate-400'
+            className={`h-2.5 md:h-2 rounded-full transition-all duration-300 min-w-[32px] min-h-[32px] flex items-center justify-center ${
+              index === currentIndex ? 'bg-accent w-8 md:w-6' : 'bg-slate-600 w-2.5 md:w-2 hover:bg-slate-400'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />
