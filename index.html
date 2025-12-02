@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="vi" class="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Fimio - Xem phim online miễn phí, chất lượng cao. Khám phá hàng ngàn bộ phim, series, anime với chất lượng Full HD, 4K. Xem phim không quảng cáo, không giới hạn." />
+  <title>Fimio - Xem Phim Online Miễn Phí - Phim Mới, Hot Nhất</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.svg" />
+
+  <!-- Open Graph Meta Tags for Social Media Sharing -->
+  <meta property="og:type" content="website" />
+  <!-- <meta property="og:url" content="https://fimio.com" /> -->
+  <meta property="og:title" content="Fimio - Xem Phim Online Miễn Phí" />
+  <meta property="og:description"
+    content="Khám phá hàng ngàn bộ phim, series, anime chất lượng cao. Xem phim Full HD, 4K không quảng cáo, không giới hạn." />
+  <meta property="og:image" content="https://i.ibb.co/tTNSSGWY/Fimio.png" />
+  <meta property="og:image:width" content="1024" />
+  <meta property="og:image:height" content="687" />
+  <meta property="og:locale" content="vi_VN" />
+
+  <!-- Twitter Card Meta Tags -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://fimio.com" />
+  <meta property="twitter:title" content="Fimio - Xem Phim Online Miễn Phí" />
+  <meta property="twitter:description"
+    content="Khám phá hàng ngàn bộ phim, series, anime chất lượng cao. Xem phim Full HD, 4K không quảng cáo." />
+  <meta property="twitter:image" content="https://i.ibb.co/tTNSSGWY/Fimio.png" />
+
+  <!-- Additional Meta Tags for SEO -->
+  <meta name="keywords" content="xem phim online, phim mới, phim hot, anime, series, phim lẻ, phim bộ, HD, 4K" />
+  <meta name="author" content="Fimio" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="color-scheme" content="dark" />
+
+  <!-- Inline critical CSS for faster first paint -->
+  <style>
+    /* Critical CSS - Minimal styles for first paint */
+    :root {
+      color-scheme: dark;
+    }
+
+    html {
+      background-color: #000;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    #root {
+      min-height: 100vh;
+      background-color: #000;
+    }
+
+    /* Loading spinner for initial load */
+    .initial-loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      z-index: 9999;
+    }
+
+    .initial-loader::after {
+      content: '';
+      width: 40px;
+      height: 40px;
+      border: 3px solid #333;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root">
+    <!-- Initial loader shown before React hydrates -->
+    <div class="initial-loader" id="initial-loader"></div>
+  </div>
+  <script type="module" src="/src/main.jsx"></script>
+  <!-- Remove initial loader once app loads -->
+  <script>
+    window.addEventListener('load', function () {
+      var loader = document.getElementById('initial-loader');
+      if (loader) loader.style.display = 'none';
+    });
+  </script>
+</body>
+
+</html>
