@@ -14,6 +14,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://fimio.vercel.app/" />
   <meta property="og:title" content="Fimio - Xem Phim Online Miễn Phí" />
+  <meta property="og:site_name" content="Fimio">
   <meta property="og:description"
     content="Khám phá hàng ngàn bộ phim, series, anime chất lượng cao. Xem phim Full HD, 4K không quảng cáo, không giới hạn." />
   <meta property="og:image" content="/src/assets/Fimio.png" />
@@ -84,6 +85,14 @@
       }
     }
   </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S3KV4K17ZN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-S3KV4K17ZN', { send_page_view: false }); //sử lại thành false để tránh gởi page  2 lần
+  </script>
 </head>
 
 <body>

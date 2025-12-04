@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { Suspense, lazy, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { PageLoadingFallback } from '@/components/common/LazyLoadHelpers';
 
@@ -24,6 +24,8 @@ const Terms = lazy(() => import('@/pages/Terms').then(m => ({ default: m.Terms }
 function App() {
   return (
     <BrowserRouter>
+      {/* Automatic pageview tracking for SPA route changes */}
+      <RouteChangeTracker />
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
           {/* Landing page without Layout (no header/footer) */}
@@ -47,6 +49,18 @@ function App() {
       </Suspense>
     </BrowserRouter>
   );
+}
+
+// SPA Route change tracker - sends page view events when the active route changes
+function RouteChangeTracker() {
+  const location = useLocation();
+  useEffect(() => {
+    // defer import to avoid bundling window related code on SSR or when gtag not present
+    import('@/lib/analytics').then(({ pageview }) => {
+      pageview(location.pathname + location.search);
+    }).catch(() => {});
+  }, [location]);
+  return null;
 }
 
 export default App;
