@@ -1,6 +1,6 @@
 // Simple Google Analytics wrapper (gtag.js) for SPA page view & event tracking
-// Measurement ID: G-S3KV4K17ZN
-export const GA_MEASUREMENT_ID = "G-S3KV4K17ZN";
+// Measurement ID: G-C35110159N
+export const GA_MEASUREMENT_ID = "G-C35110159N";
 
 // Send a pageview to Google Analytics
 export const pageview = (path) => {
