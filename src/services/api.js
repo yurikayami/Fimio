@@ -166,10 +166,9 @@ export const getCountries = async () => {
  * Automatically converts JPG/PNG to WebP for better performance
  * Endpoint: https://phimapi.com/image.php?url={original_url}
  * @param {string} url - Original image URL from API
- * @param {Object} options - Additional options
  * @returns {string} - WebP image URL
  */
-export const buildImageUrl = (url, options = {}) => {
+export const buildImageUrl = (url) => {
   if (!url) return "/placeholder.jpg";
   if (url.startsWith("blob:") || url.startsWith("data:")) return url;
 

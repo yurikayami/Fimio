@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getMovieDetails, buildImageUrl } from '@/services/api';
-import { useSavedMovies } from '@/hooks/useLocalStorage';
-import { addToWatchHistory } from '@/lib/watchHistory';
-import { updateUserStats } from '@/lib/userStats';
+import { useUserActions } from '@/hooks/useUserActions';
+import { useAuth } from '@/contexts/AuthContext';
 import { VideoPlayer } from '@/components/movie/VideoPlayer';
 import { EpisodeSelector } from '@/components/movie/EpisodeSelector';
 import { Button } from '@/components/ui/button';
@@ -17,7 +16,9 @@ export const MovieDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentEpisode, setCurrentEpisode] = useState({ embedUrl: '', name: '' });
-  const { saveMovie, removeMovie, isMovieSaved } = useSavedMovies();
+  const { addToLibrary, addToHistory, checkIsSaved } = useUserActions();
+  const { user, signInWithGoogle } = useAuth();
+  const [isSaved, setIsSaved] = useState(false);
 
   const loadMovieDetails = useCallback(async () => {
     try {
@@ -29,10 +30,10 @@ export const MovieDetail = () => {
         // Handle both root-level and nested data structures
         const movieData = response.movie || response.data?.movie;
         const episodesData = response.episodes || response.data?.episodes;
-        
+
         if (movieData) {
           setMovie({ movie: movieData, episodes: episodesData || [] });
-          
+
           // Auto-play first episode if available
           if (episodesData && episodesData[0]?.server_data?.[0]) {
             const firstEpisode = episodesData[0].server_data[0];
@@ -56,62 +57,45 @@ export const MovieDetail = () => {
 
   // Track watch history when movie loads
   useEffect(() => {
+    // Check if saved when movie loads
     if (movie && movie.movie) {
-      const movieData = {
-        slug: movie.movie.slug,
-        name: movie.movie.name,
-        origin_name: movie.movie.origin_name,
-        poster_url: movie.movie.poster_url,
-        thumb_url: movie.movie.thumb_url,
-        year: movie.movie.year,
-        category: movie.movie.category,
-        country: movie.movie.country
-      };
-      
-      // Add to watch history
-      addToWatchHistory(movieData, currentEpisode.name);
-      
-      // Update user stats (assuming average 45 min per episode)
-      updateUserStats(movieData, 45);
+      checkIsSaved(movie.movie.slug).then(setIsSaved);
     }
-  }, [movie, currentEpisode.name]);
+
+    // Auto add to history on load
+    if (movie && movie.movie && user) {
+      addToHistory(movie, currentEpisode.name || 'Full Movie');
+    }
+  }, [movie, user, checkIsSaved, addToHistory, currentEpisode.name]); // Watch user too
 
   const handleEpisodeSelect = (embedUrl, episodeName) => {
     setCurrentEpisode({ embedUrl, name: episodeName });
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
+
     // Update watch history with new episode
-    if (movie && movie.movie) {
-      const movieData = {
-        slug: movie.movie.slug,
-        name: movie.movie.name,
-        origin_name: movie.movie.origin_name,
-        poster_url: movie.movie.poster_url,
-        thumb_url: movie.movie.thumb_url,
-        year: movie.movie.year,
-        category: movie.movie.category,
-        country: movie.movie.country
-      };
-      addToWatchHistory(movieData, episodeName);
+    if (movie && movie.movie && user) {
+      addToHistory(movie, episodeName);
     }
   };
 
-  const handleBookmark = () => {
+  const handleBookmark = async () => {
+    if (!user) {
+      signInWithGoogle(); // Simple auto login trigger
+      return;
+    }
+
     if (!movie) return;
 
-    const movieData = {
-      slug: movie.movie.slug,
-      name: movie.movie.name,
-      origin_name: movie.movie.origin_name,
-      poster_url: movie.movie.poster_url,
-      thumb_url: movie.movie.thumb_url,
-      year: movie.movie.year,
-    };
-
-    if (isMovieSaved(movie.movie.slug)) {
-      removeMovie(movie.movie.slug);
-    } else {
-      saveMovie(movieData);
+    if (!isSaved) {
+      // Pass the fully structured object matching API response for sync_movie_data
+      // movie state is { movie: {...}, episodes: [...] }
+      // sync_movie_data expects p_movie_data->'movie' and p_movie_data->'episodes'
+      const result = await addToLibrary(movie);
+      if (result.success) {
+        setIsSaved(true);
+      } else {
+        alert(result.error);
+      }
     }
   };
 
@@ -128,7 +112,6 @@ export const MovieDetail = () => {
   }
 
   const movieData = movie.movie;
-  const isSaved = isMovieSaved(movieData.slug);
 
   return (
     <div className="space-y-4 md:space-y-8">
@@ -167,11 +150,11 @@ export const MovieDetail = () => {
                 e.target.src = buildImageUrl(movieData.thumb_url);
               }}
             />
-            
-            {/* Action Buttons - Tăng kích thước cho mobile */}
+
+              {/* Action Buttons */}
             <div className="flex gap-2 mt-3 md:mt-4">
               <Button
-                onClick={handleBookmark}
+                onClick={() => handleBookmark()}
                 variant={isSaved ? 'default' : 'outline'}
                 className="flex-1 min-h-[48px] h-12 text-sm md:text-base active:scale-95"
               >
@@ -187,7 +170,7 @@ export const MovieDetail = () => {
                   </>
                 )}
               </Button>
-              
+
               {movieData.trailer_url && (
                 <Button
                   asChild
@@ -212,7 +195,7 @@ export const MovieDetail = () => {
             <p className="text-base md:text-xl text-muted-foreground">{movieData.origin_name}</p>
           </div>
 
-          {/* Meta Info - Ẩn một số trên mobile */}
+          {/* Meta Info */}
           <div className="flex flex-wrap gap-2 md:gap-3">
             {movieData.year && (
               <div className="flex items-center gap-1.5 md:gap-2 px-2 py-1 md:px-3 md:py-1.5 bg-secondary rounded-lg border border-slate-700">
@@ -220,32 +203,32 @@ export const MovieDetail = () => {
                 <span className="text-xs md:text-sm font-medium">{movieData.year}</span>
               </div>
             )}
-            
             {movieData.time && (
-              <div className="hidden sm:flex items-center gap-1.5 md:gap-2 px-2 py-1 md:px-3 md:py-1.5 bg-secondary rounded-lg border border-slate-700">
+              <div className="flex items-center gap-1.5 md:gap-2 px-2 py-1 md:px-3 md:py-1.5 bg-secondary rounded-lg border border-slate-700">
                 <Clock className="h-3.5 w-3.5 md:h-4 md:w-4 text-accent" />
                 <span className="text-xs md:text-sm font-medium">{movieData.time}</span>
               </div>
             )}
-            
-            {movieData.episode_current && (
-              <div className="flex items-center gap-1.5 md:gap-2 px-2 py-1 md:px-3 md:py-1.5 bg-secondary rounded-lg border border-slate-700">
-                <Play className="h-3.5 w-3.5 md:h-4 md:w-4 text-accent" />
-                <span className="text-xs md:text-sm font-medium">{movieData.episode_current}</span>
-              </div>
-            )}
-            
             {movieData.quality && (
-              <div className="px-2 py-1 md:px-3 md:py-1.5 bg-accent rounded-lg">
-                <span className="text-xs md:text-sm font-bold">{movieData.quality}</span>
+              <div className="px-2 py-1 md:px-3 md:py-1.5 bg-secondary rounded-lg border border-slate-700">
+                <span className="text-xs md:text-sm font-bold text-emerald-400">{movieData.quality}</span>
               </div>
             )}
-            
             {movieData.lang && (
-              <div className="hidden sm:block px-2 py-1 md:px-3 md:py-1.5 bg-green-600 rounded-lg">
+              <div className="px-2 py-1 md:px-3 md:py-1.5 bg-secondary rounded-lg border border-slate-700">
                 <span className="text-xs md:text-sm font-medium">{movieData.lang}</span>
               </div>
             )}
+             {/* TMDB Rating */}
+            {movieData.tmdb && (
+              <div className="flex items-center gap-1.5 md:gap-2 px-2 py-1 md:px-3 md:py-1.5 bg-amber-950/30 rounded-lg border border-amber-900/50">
+                <Star className="h-3.5 w-3.5 md:h-4 md:w-4 text-amber-500 fill-amber-500" />
+                <span className="text-xs md:text-sm font-bold text-amber-500">
+                  {movieData.tmdb.vote_average}
+                </span>
+              </div>
+            )}
+
           </div>
 
           {/* Description */}
@@ -265,12 +248,13 @@ export const MovieDetail = () => {
               <h2 className="text-xl font-heading font-semibold mb-3">Thể loại</h2>
               <div className="flex flex-wrap gap-2">
                 {movieData.category.map((cat) => (
-                  <span
+                  <Link
                     key={cat.id}
-                    className="px-3 py-1.5 bg-secondary rounded-lg border border-slate-700 text-sm"
+                    to={`/explore?category=${cat.slug}`}
+                    className="px-3 py-1.5 bg-secondary rounded-lg border border-slate-700 text-sm hover:bg-slate-700 hover:text-white transition-colors"
                   >
                     {cat.name}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -285,39 +269,18 @@ export const MovieDetail = () => {
               </h2>
               <div className="flex flex-wrap gap-2">
                 {movieData.country.map((country) => (
-                  <span
+                  <Link
                     key={country.id}
-                    className="px-3 py-1.5 bg-secondary rounded-lg border border-slate-700 text-sm"
+                    to={`/explore?country=${country.slug}`}
+                    className="px-3 py-1.5 bg-secondary rounded-lg border border-slate-700 text-sm hover:bg-slate-700 hover:text-white transition-colors"
                   >
                     {country.name}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Actors */}
-          {movieData.actor && movieData.actor.length > 0 && (
-            <div>
-              <h2 className="text-xl font-heading font-semibold mb-3 flex items-center gap-2">
-                <Star className="h-5 w-5" />
-                Diễn viên
-              </h2>
-              <p className="text-muted-foreground">
-                {movieData.actor.join(', ')}
-              </p>
-            </div>
-          )}
-
-          {/* Directors */}
-          {movieData.director && movieData.director.length > 0 && (
-            <div>
-              <h2 className="text-xl font-heading font-semibold mb-3">Đạo diễn</h2>
-              <p className="text-muted-foreground">
-                {movieData.director.join(', ')}
-              </p>
-            </div>
-          )}
         </div>
       </section>
     </div>

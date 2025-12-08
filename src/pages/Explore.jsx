@@ -22,7 +22,20 @@ export const Explore = () => {
   // Filters - Initialize category from URL query param
   const [typeList, setTypeList] = useState('phim-le');
   const [category, setCategory] = useState(() => searchParams.get('category') || 'all');
-  const [country, setCountry] = useState('all');
+  const [country, setCountry] = useState(() => searchParams.get('country') || 'all');
+
+  // Sync state with URL params on navigation (e.g. clicking from MovieDetail)
+  useEffect(() => {
+    const catParam = searchParams.get('category');
+    if (catParam && catParam !== category) {
+      setCategory(catParam);
+    }
+    
+    const countryParam = searchParams.get('country');
+    if (countryParam && countryParam !== country) {
+      setCountry(countryParam);
+    }
+  }, [searchParams, category, country]);
   const [year, setYear] = useState('all');
   const [sortType, setSortType] = useState('desc');
 

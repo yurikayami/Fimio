@@ -21,33 +21,37 @@ const About = lazy(() => import('@/pages/About').then(m => ({ default: m.About }
 const FAQ = lazy(() => import('@/pages/FAQ').then(m => ({ default: m.FAQ })));
 const Terms = lazy(() => import('@/pages/Terms').then(m => ({ default: m.Terms })));
 
+import { AuthProvider } from '@/contexts/AuthContext';
+
 function App() {
   return (
-    <BrowserRouter>
-      {/* Automatic pageview tracking for SPA route changes */}
-      <RouteChangeTracker />
-      <Suspense fallback={<PageLoadingFallback />}>
-        <Routes>
-          {/* Landing page without Layout (no header/footer) */}
-          <Route path="/" element={<Landing />} />
-          
-          {/* Main app routes with Layout */}
-          <Route path="/" element={<Layout />}>
-            <Route path="home" element={<Home />} />
-            {/* All other routes are lazy loaded */}
-            <Route path="search" element={<Search />} />
-            <Route path="explore" element={<Explore />} />
-            <Route path="movie/:slug" element={<MovieDetail />} />
-            <Route path="saved" element={<SavedMovies />} />
-            <Route path="history" element={<WatchHistory />} />
-            <Route path="profile" element={<UserProfile />} />
-            <Route path="about" element={<About />} />
-            <Route path="faq" element={<FAQ />} />
-            <Route path="terms" element={<Terms />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        {/* Automatic pageview tracking for SPA route changes */}
+        <RouteChangeTracker />
+        <Suspense fallback={<PageLoadingFallback />}>
+          <Routes>
+            {/* Landing page without Layout (no header/footer) */}
+            <Route path="/" element={<Landing />} />
+
+            {/* Main app routes with Layout */}
+            <Route path="/" element={<Layout />}>
+              <Route path="home" element={<Home />} />
+              {/* All other routes are lazy loaded */}
+              <Route path="search" element={<Search />} />
+              <Route path="explore" element={<Explore />} />
+              <Route path="movie/:slug" element={<MovieDetail />} />
+              <Route path="saved" element={<SavedMovies />} />
+              <Route path="history" element={<WatchHistory />} />
+              <Route path="profile" element={<UserProfile />} />
+              <Route path="about" element={<About />} />
+              <Route path="faq" element={<FAQ />} />
+              <Route path="terms" element={<Terms />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
@@ -56,9 +60,9 @@ function RouteChangeTracker() {
   const location = useLocation();
   useEffect(() => {
     // defer import to avoid bundling window related code on SSR or when gtag not present
-    import('@/lib/analytics').then(({ pageview }) => {
+    import('@/lib/tracker').then(({ pageview }) => {
       pageview(location.pathname + location.search);
-    }).catch(() => {});
+    }).catch(() => { });
   }, [location]);
   return null;
 }

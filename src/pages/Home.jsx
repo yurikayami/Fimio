@@ -21,7 +21,7 @@ import { Languages } from 'lucide-react';
 
 export const Home = () => {
   const [heroMovies, setHeroMovies] = useState([]);
-  
+
   // Sections Data - 9 sections with different layouts
   const [sections, setSections] = useState({
     latest: [],
@@ -37,7 +37,7 @@ export const Home = () => {
     recommended: [],
     trending: []
   });
-  
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -54,8 +54,8 @@ export const Home = () => {
       const results = await Promise.allSettled([
         getLatestMovies(1), // Hero & Latest & Cinema
         getMoviesByType('phim-bo', { country: 'han-quoc', limit: 10 }), // Korea
-        getMoviesByType('phim-le', { country: 'nhat-ban', limit: 10 }), // Series, Recommended, Trending
-        getMoviesByType('phim-le', { limit:4 }), // Single
+        getMoviesByType('hoat-hinh', { country: 'nhat-ban', limit: 10 }), // Series, Recommended, Trending
+        getMoviesByType('phim-le', { limit: 4 }), // Single
         getMoviesByType('hoat-hinh', { limit: 12 }), // Cartoon
         getMoviesByType('hoat-hinh', { country: 'nhat-ban', limit: 10, page: 2 }), // Anime (page 2)
         getMoviesByType('phim-bo', { category: 'hanh-dong', limit: 10 }), // Action
@@ -64,10 +64,10 @@ export const Home = () => {
       ]);
 
       const [
-        latestRes, 
-        koreaRes, 
-        seriesRes, 
-        singleRes, 
+        latestRes,
+        koreaRes,
+        seriesRes,
+        singleRes,
         cartoonRes,
         animeRes,
         actionRes,
@@ -87,9 +87,9 @@ export const Home = () => {
       const actionItems = getItems(actionRes);
       const romanceItems = getItems(romanceRes);
       const comedyItems = getItems(comedyRes);
-      
+
       setHeroMovies(latestItems.slice(0, 5));
-      
+
       setSections({
         latest: latestItems,
         korea: koreaItems,
@@ -120,11 +120,11 @@ export const Home = () => {
   };
 
   if (error && !heroMovies.length) {
-     return (
-       <div className="pt-20 container mx-auto px-4">
-         <ErrorMessage message={error} onRetry={fetchAllData} />
-       </div>
-     );
+    return (
+      <div className="pt-20 container mx-auto px-4">
+        <ErrorMessage message={error} onRetry={fetchAllData} />
+      </div>
+    );
   }
 
   return (
@@ -140,86 +140,86 @@ export const Home = () => {
 
       {/* Quick Categories */}
       <div className="container mx-auto px-4 -mt-12 relative z-20">
-         <CategoryRail />
+        <CategoryRail />
       </div>
 
       {/* Movie Rows */}
       <div className="container mx-auto px-4 space-y-10 mt-8">
         {isLoading && !sections.latest.length ? (
-           // Simple loading state for rows
-           <div className="space-y-8">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="space-y-4">
-                  <div className="h-8 w-48 bg-slate-800 rounded animate-pulse" />
-                  <div className="flex gap-4 overflow-hidden">
-                    {[1, 2, 3, 4, 5].map((j) => (
-                      <div key={j} className="w-[200px] h-[300px] bg-slate-800 rounded animate-pulse flex-shrink-0" />
-                    ))}
-                  </div>
+          // Simple loading state for rows
+          <div className="space-y-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="space-y-4">
+                <div className="h-8 w-48 bg-slate-800 rounded animate-pulse" />
+                <div className="flex gap-4 overflow-hidden">
+                  {[1, 2, 3, 4, 5].map((j) => (
+                    <div key={j} className="w-[200px] h-[300px] bg-slate-800 rounded animate-pulse flex-shrink-0" />
+                  ))}
                 </div>
-              ))}
-           </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <>
             {/* Section 1: Top 10 - Grid */}
-            <Top10Section 
-              title="Top 10 Phim Hot" 
+            <Top10Section
+              title="Top 10 Phim Hot"
               movies={sections.latest}
               isLoading={isLoading}
             />
 
             {/* Section 2: Latest Movies - Horizontal Row */}
-            <MovieRow 
-              title="Phim Mới Cập Nhật" 
+            <MovieRow
+              title="Phim Mới Cập Nhật"
               movies={sections.latest}
               variant="default"
             />
 
             {/* Section 3: Korea Movies - Banner Style */}
-            <MovieBannerSection 
-              title="Phim Hàn Quốc" 
+            <MovieBannerSection
+              title="Phim Hàn Quốc"
               movies={sections.korea}
             />
 
             {/* Section 4: Cinema - Grid */}
-            <CinemaSection 
-              title="Màn Nhấn với Phim Chiếu Rạp" 
+            <CinemaSection
+              title="Màn Nhấn với Phim Chiếu Rạp"
               movies={sections.cinema}
               isLoading={isLoading}
             />
 
             {/* Section 5: TV Series - Spotlight Style */}
-            <MovieSpotlightSection 
-              title="Phim Bộ Hay" 
+            <MovieSpotlightSection
+              title="Phim Bộ Hay"
               movies={sections.series}
             />
 
-            
+
 
             {/* Section 6: Single Movies - List Style */}
-            <MovieListSection 
-              title="Phim Lẻ Hay" 
+            <MovieListSection
+              title="Phim Lẻ Hay"
               movies={sections.single}
             />
 
             {/* Section 7: Recommended - Grid */}
-            <RecommendedSection 
-              title="Được Đề Xuất Cho Bạn" 
+            <RecommendedSection
+              title="Được Đề Xuất Cho Bạn"
               movies={sections.recommended}
               isLoading={isLoading}
             />
 
             {/* Section 8: Cartoon & Anime - Grid Style */}
-            <MovieGridSection 
-              title="Hoạt Hình" 
+            <MovieGridSection
+              title="Hoạt Hình"
               movies={sections.cartoon}
               cols={6}
             />
 
             {/* Section 9: Anime - Specialized Card Style */}
             {sections.anime.length > 0 && (
-              <AnimeSection 
-                title="Anime & Nhật Bản" 
+              <AnimeSection
+                title="Anime & Nhật Bản"
                 movies={sections.anime}
                 isLoading={isLoading}
               />
@@ -227,24 +227,24 @@ export const Home = () => {
 
             {/* Section 10: Action Movies - Carousel Style */}
             {sections.action.length > 0 && (
-              <MovieCarouselSection 
-                title="Phim Hành Động" 
+              <MovieCarouselSection
+                title="Phim Hành Động"
                 movies={sections.action}
               />
             )}
 
             {/* Section 11: Romance Movies - Stack Style */}
             {sections.romance.length > 0 && (
-              <MovieStackSection 
-                title="Phim Tình Cảm" 
+              <MovieStackSection
+                title="Phim Tình Cảm"
                 movies={sections.romance}
               />
             )}
 
             {/* Section 12: Comedy Movies - Grid Style */}
             {sections.comedy.length > 0 && (
-              <MovieGridSection 
-                title="Phim Hài Hước" 
+              <MovieGridSection
+                title="Phim Hài Hước"
                 movies={sections.comedy}
                 cols={5}
               />
