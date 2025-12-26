@@ -90,6 +90,43 @@ export const VideoPlayer = ({
       // Khởi tạo Artplayer
       const art = new Artplayer(playerConfig);
       playerRef.current = art;
+
+      // Handle fullscreen orientation change on mobile
+      const handleFullscreenChange = async () => {
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+        
+        if (isFullscreen && window.screen?.orientation) {
+          try {
+            // Lock orientation to landscape when entering fullscreen
+            await window.screen.orientation.lock('landscape').catch(() => {
+              // Fallback: try landscape-primary
+              return window.screen.orientation.lock('landscape-primary').catch(() => {
+                console.log('Device does not support screen orientation locking');
+              });
+            });
+          } catch (error) {
+            console.log('Could not lock screen orientation:', error);
+          }
+        } else if (!isFullscreen && window.screen?.orientation) {
+          try {
+            // Unlock orientation when exiting fullscreen
+            window.screen.orientation.unlock();
+          } catch (error) { 
+            console.log('Could not unlock screen orientation:', error);
+          }
+        }
+      };
+
+      // Listen for fullscreen changes
+      document.addEventListener('fullscreenchange', handleFullscreenChange);
+      document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+
+      return () => {
+        document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      };
     } catch (error) {
       console.error('Error initializing Artplayer:', error);
     }
@@ -132,7 +169,7 @@ export const VideoPlayer = ({
   }
 
   return (
-    <div className={cn(
+    <div className={cn( 
       "w-full rounded-lg border border-slate-700 overflow-hidden bg-black",
       className
     )}>
@@ -150,7 +187,7 @@ export const VideoPlayer = ({
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#000'
-        }}
+        }} 
       />
     </div>
   );
