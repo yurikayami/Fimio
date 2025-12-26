@@ -38,7 +38,7 @@ export const MovieDetail = () => {
           if (episodesData && episodesData[0]?.server_data?.[0]) {
             const firstEpisode = episodesData[0].server_data[0];
             setCurrentEpisode({
-              embedUrl: firstEpisode.link_embed,
+              embedUrl: firstEpisode.link_m3u8 || firstEpisode.link_embed,
               name: firstEpisode.name,
             });
           }

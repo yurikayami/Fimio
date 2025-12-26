@@ -19,7 +19,7 @@ export const EpisodeSelector = ({ episodes = [], onEpisodeSelect }) => {
     setActiveEpisode(episodeIndex);
     const episode = episodes[currentServer].server_data[episodeIndex];
     if (onEpisodeSelect) {
-      onEpisodeSelect(episode.link_embed, episode.name);
+      onEpisodeSelect(episode.link_m3u8 || episode.link_embed, episode.name);
     }
   };
 
