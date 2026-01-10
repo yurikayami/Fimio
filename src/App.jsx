@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Suspense, lazy, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { PageLoadingFallback } from '@/components/common/LazyLoadHelpers';
+import { UpdateDialog } from '@/components/common/UpdateDialog';
 
 // Landing page loaded eagerly
 import { Landing } from '@/pages/Landing';
@@ -29,6 +30,8 @@ function App() {
       <BrowserRouter>
         {/* Automatic pageview tracking for SPA route changes */}
         <RouteChangeTracker />
+        {/* Update dialog for OTA updates on mobile */}
+        <UpdateDialog />
         <Suspense fallback={<PageLoadingFallback />}>
           <Routes>
             {/* Landing page without Layout (no header/footer) */}

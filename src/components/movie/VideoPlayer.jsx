@@ -47,7 +47,7 @@ export const VideoPlayer = ({
       autoplay: false,
       pip: true,
       autoSize: true,
-      autoMini: true,
+      autoMini: false,
       screenshot: true,
       setting: true,
       loop: false,
@@ -81,6 +81,35 @@ export const VideoPlayer = ({
           }
         },
       },
+
+      // Thêm nút Back 10s và Next 10s trên thanh tiến trình
+      controls: [
+        {
+          position: 'left',
+          html: '-10s',
+          index: 1,
+          tooltip: 'Back 10s',
+          click() {
+            // Lấy player instance từ Artplayer
+            const video = document.querySelector('video');
+            if (video) {
+              video.currentTime = Math.max(0, video.currentTime - 10);
+            }
+          },
+        },
+        {
+          position: 'left',
+          html: '+10s',
+          index: 2,
+          tooltip: 'Next 10s',
+          click() {
+            const video = document.querySelector('video');
+            if (video) {
+              video.currentTime = Math.min(video.duration, video.currentTime + 10);
+            }
+          },
+        },
+      ],
       
       // Merge với config tùy chỉnh
       ...config,
@@ -90,6 +119,80 @@ export const VideoPlayer = ({
       // Khởi tạo Artplayer
       const art = new Artplayer(playerConfig);
       playerRef.current = art;
+
+      let hidePlayButtonTimer = null;
+
+      // Chỉ chạy một lần khi player ready
+      art.on('ready', () => {
+        const playButton = art.template.$play;
+        if (!playButton) {
+          console.warn('Play button not found');
+          return;
+        }
+
+        // Ẩn nút Play khi video đang phát
+        art.on('video:play', () => {
+          if (hidePlayButtonTimer) {
+            clearTimeout(hidePlayButtonTimer);
+            hidePlayButtonTimer = null;
+          }
+          playButton.style.opacity = '0';
+          playButton.style.pointerEvents = 'none';
+        });
+
+        // Hiện nút Play khi pause
+        art.on('video:pause', () => {
+          if (hidePlayButtonTimer) {
+            clearTimeout(hidePlayButtonTimer);
+          }
+          playButton.style.opacity = '0.1';
+          playButton.style.pointerEvents = 'auto';
+
+          // Sau 1s tự động ẩn nếu không hover
+          hidePlayButtonTimer = setTimeout(() => {
+            if (!art.playing) {
+              playButton.style.opacity = '0';
+              playButton.style.pointerEvents = 'none';
+            }
+          }, 1000);
+        });
+
+        // Khi hover vào nút Play, giữ lại
+        playButton.addEventListener('mouseenter', () => {
+          if (hidePlayButtonTimer) {
+            clearTimeout(hidePlayButtonTimer);
+            hidePlayButtonTimer = null;
+          }
+          playButton.style.opacity = '0.1';
+        });
+
+        playButton.addEventListener('mouseleave', () => {
+          if (!art.playing) {
+            hidePlayButtonTimer = setTimeout(() => {
+              playButton.style.opacity = '0';
+              playButton.style.pointerEvents = 'none';
+            }, 1000);
+          }
+        });
+
+        // Phím tắt F cho Fullscreen
+        const handleKeyPress = (e) => {
+          if (e.key === 'f' || e.key === 'F') {
+            e.preventDefault();
+            art.fullscreen = !art.fullscreen;
+          }
+        };
+
+        document.addEventListener('keydown', handleKeyPress);
+        
+        // Cleanup
+        art.on('destroy', () => {
+          document.removeEventListener('keydown', handleKeyPress);
+          if (hidePlayButtonTimer) {
+            clearTimeout(hidePlayButtonTimer);
+          }
+        });
+      });
 
       // Handle fullscreen orientation change on mobile
       const handleFullscreenChange = async () => {

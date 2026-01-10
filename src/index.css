@@ -40,10 +40,33 @@
     border-color: hsl(var(--border));
   }
 
+  html {
+    /* Ngăn chặn hiệu ứng overscroll (rubber-band) trên mobile */
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    /* Fix cho iOS Safari */
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    overflow: hidden;
+  }
+
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-family: "Inter", sans-serif;
+    /* Ngăn chặn hiệu ứng overscroll */
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    height: 100%;
+    overflow: auto;
+    position: relative;
+  }
+
+  #root {
+    /* Ngăn overscroll ở container chính */
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    min-height: 100vh;
   }
 
   h1,

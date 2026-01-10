@@ -17,6 +17,7 @@ import { CinemaSection } from '@/components/home/CinemaSection';
 import { RecommendedSection } from '@/components/home/RecommendedSection';
 import { TrendingSection } from '@/components/home/TrendingSection';
 import { AnimeSection } from '@/components/home/AnimeSection';
+import { ContinueWatchingSection } from '@/components/home/ContinueWatchingSection';
 import { Languages } from 'lucide-react';
 
 export const Home = () => {
@@ -161,6 +162,9 @@ export const Home = () => {
           </div>
         ) : (
           <>
+            {/* Continue Watching Section - Netflix Style */}
+            <ContinueWatchingSection />
+
             {/* Section 1: Top 10 - Grid */}
             <Top10Section
               title="Top 10 Phim Hot"

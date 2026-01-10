@@ -80,6 +80,9 @@ export default {
         "ken-burns": "ken-burns 20s linear alternate infinite",
         shimmer: "shimmer 2s linear infinite",
       },
+      spacing: {
+        safe: "env(safe-area-inset-bottom)",
+      },
     },
   },
   plugins: [],

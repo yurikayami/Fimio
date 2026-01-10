@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase, getRedirectUrl } from '@/lib/supabase';
+import { Capacitor } from '@capacitor/core';
 
 const AuthContext = createContext({});
 
@@ -11,6 +12,13 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Initialize Google Auth on native platforms
+        if (Capacitor.isNativePlatform()) {
+            import('@/services/googleAuth').then(({ initGoogleAuth }) => {
+                initGoogleAuth();
+            });
+        }
+
         // Check active sessions and sets the user
         supabase.auth.getSession().then(({ data: { session } }) => {
             setUser(session?.user ?? null);
@@ -29,13 +37,31 @@ export const AuthProvider = ({ children }) => {
         user,
         loading,
         signInWithGoogle: async () => {
-            const { error } = await supabase.auth.signInWithOAuth({
+            // Use native Google Sign-In on mobile for popup experience
+            if (Capacitor.isNativePlatform()) {
+                try {
+                    const { signInWithGoogleNative } = await import('@/services/googleAuth');
+                    const data = await signInWithGoogleNative();
+                    return data;
+                } catch (error) {
+                    console.error('Native Google Sign-In failed:', error);
+                    throw error;
+                }
+            }
+
+            // Fallback to OAuth redirect for web
+            const redirectTo = getRedirectUrl();
+            console.log('Signing in with Google, redirect to:', redirectTo);
+            
+            const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${window.location.origin}/profile`,
+                    redirectTo,
                 }
             });
+            
             if (error) throw error;
+            return data;
         },
         signInWithEmail: async (email, password) => {
             const { data, error } = await supabase.auth.signInWithPassword({
