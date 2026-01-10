@@ -122,6 +122,19 @@ export const VideoPlayer = ({
 
       let hidePlayButtonTimer = null;
 
+      // Phím tắt F cho Fullscreen - định nghĩa ở ngoài để reference ổn định
+      const handleKeyPress = (e) => {
+        if (e.key === 'f' || e.key === 'F') {
+          e.preventDefault();
+          if (playerRef.current) {
+            playerRef.current.fullscreen = !playerRef.current.fullscreen;
+          }
+        }
+      };
+
+      // Thêm event listener cho phím tắt
+      document.addEventListener('keydown', handleKeyPress);
+
       // Chỉ chạy một lần khi player ready
       art.on('ready', () => {
         const playButton = art.template.$play;
@@ -174,24 +187,6 @@ export const VideoPlayer = ({
             }, 1000);
           }
         });
-
-        // Phím tắt F cho Fullscreen
-        const handleKeyPress = (e) => {
-          if (e.key === 'f' || e.key === 'F') {
-            e.preventDefault();
-            art.fullscreen = !art.fullscreen;
-          }
-        };
-
-        document.addEventListener('keydown', handleKeyPress);
-        
-        // Cleanup
-        art.on('destroy', () => {
-          document.removeEventListener('keydown', handleKeyPress);
-          if (hidePlayButtonTimer) {
-            clearTimeout(hidePlayButtonTimer);
-          }
-        });
       });
 
       // Handle fullscreen orientation change on mobile
@@ -229,6 +224,7 @@ export const VideoPlayer = ({
         document.removeEventListener('fullscreenchange', handleFullscreenChange);
         document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
         document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.removeEventListener('keydown', handleKeyPress);
       };
     } catch (error) {
       console.error('Error initializing Artplayer:', error);

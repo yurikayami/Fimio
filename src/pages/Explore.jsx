@@ -7,6 +7,7 @@ import { ErrorMessage } from '@/components/common/ErrorMessage';
 import { FilterCombobox } from '@/components/common/FilterCombobox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -18,6 +19,7 @@ export const Explore = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [pageInput, setPageInput] = useState('1');
 
   // Filters - Initialize category from URL query param
   const [typeList, setTypeList] = useState('phim-le');
@@ -75,8 +77,34 @@ export const Explore = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [loadMovies]);
 
+  // Update pageInput when currentPage changes from pagination
+  useEffect(() => {
+    setPageInput(currentPage.toString());
+  }, [currentPage]);
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
+    setPageInput(page.toString());
+  };
+
+  const handlePageInputChange = (e) => {
+    const value = e.target.value;
+    setPageInput(value);
+  };
+
+  const handleGoToPage = () => {
+    const pageNum = parseInt(pageInput, 10);
+    if (!isNaN(pageNum) && pageNum > 0 && pageNum <= totalPages) {
+      setCurrentPage(pageNum);
+    } else {
+      setPageInput(currentPage.toString());
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleGoToPage();
+    }
   };
 
   const handleFilterChange = () => {
@@ -332,12 +360,39 @@ export const Explore = () => {
           <>
             <MovieGrid movies={movies} isLoading={isLoading} />
             {!isLoading && movies.length > 0 && (
-              <div className="mt-8">
+              <div className="mt-8 space-y-4">
                  <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={handlePageChange}
                 />
+                
+                {/* Go to specific page input */}
+                <div className="flex items-center justify-center gap-2 mt-6">
+                  <label htmlFor="page-input" className="text-sm text-slate-400">
+                    Đi đến trang:
+                  </label>
+                  <Input
+                    id="page-input"
+                    type="number"
+                    min="1"
+                    max={totalPages}
+                    value={pageInput}
+                    onChange={handlePageInputChange}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Nhập số trang"
+                    className="w-20 h-10 text-center border-slate-600"
+                  />
+                  <Button 
+                    onClick={handleGoToPage}
+                    className="h-10 px-4 bg-red-600 hover:bg-red-700"
+                  >
+                    Đi
+                  </Button>
+                  <span className="text-sm text-slate-400 ml-2">
+                    / {totalPages}
+                  </span>
+                </div>
               </div>
             )}
           </>
