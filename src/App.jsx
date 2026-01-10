@@ -43,6 +43,7 @@ function App() {
               {/* All other routes are lazy loaded */}
               <Route path="search" element={<Search />} />
               <Route path="explore" element={<Explore />} />
+              <Route path="explore/:page" element={<Explore />} />
               <Route path="movie/:slug" element={<MovieDetail />} />
               <Route path="saved" element={<SavedMovies />} />
               <Route path="history" element={<WatchHistory />} />

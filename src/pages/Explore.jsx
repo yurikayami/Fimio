@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { MovieGrid } from '@/components/movie/MovieGrid';
 import { Pagination } from '@/components/common/Pagination';
 import { getMoviesByType } from '@/services/api';
@@ -13,13 +13,18 @@ import { cn } from '@/lib/utils';
 
 export const Explore = () => {
   const [searchParams] = useSearchParams();
+  const { page: pageParam } = useParams();
+  const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() => {
+    const num = parseInt(pageParam, 10);
+    return !isNaN(num) && num > 0 ? num : 1;
+  });
   const [totalPages, setTotalPages] = useState(1);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [pageInput, setPageInput] = useState('1');
+  const [pageInput, setPageInput] = useState(() => pageParam || '1');
 
   // Filters - Initialize category from URL query param
   const [typeList, setTypeList] = useState('phim-le');
@@ -85,6 +90,7 @@ export const Explore = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
     setPageInput(page.toString());
+    navigate(`/explore/${page}`);
   };
 
   const handlePageInputChange = (e) => {
@@ -96,6 +102,7 @@ export const Explore = () => {
     const pageNum = parseInt(pageInput, 10);
     if (!isNaN(pageNum) && pageNum > 0 && pageNum <= totalPages) {
       setCurrentPage(pageNum);
+      navigate(`/explore/${pageNum}`);
     } else {
       setPageInput(currentPage.toString());
     }
